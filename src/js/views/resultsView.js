@@ -31,6 +31,11 @@ class ResultsView extends View {
         </li>
           `;
   }
+
+  //   _pagination() {
+  //     const btn = document.querySelector('.pagination');
+  //     btn.classList.remove('hidden');
+  //   }
 }
 
 export default new ResultsView();

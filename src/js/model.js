@@ -1,5 +1,5 @@
 import { async } from 'regenerator-runtime';
-import { API_URL } from './config.js';
+import { API_URL, RES_PER_PAGE } from './config.js';
 import { getJSON } from './helper.js';
 
 export const state = {
@@ -7,6 +7,8 @@ export const state = {
   serch: {
     query: '',
     results: [],
+    page: 1,
+    resultPerPage: RES_PER_PAGE,
   },
 };
 
@@ -50,4 +52,13 @@ export const loadSerchResults = async function (query) {
     console.error(`${err}`);
     throw err;
   }
+};
+
+//show recipes for current page
+export const getSearhResultsPage = function (page = state.serch.page) {
+  state.serch.page = page;
+  const start = (page - 1) * state.serch.resultPerPage; // 0
+  const end = page * state.serch.resultPerPage; // 10
+
+  return state.serch.results.slice(start, end);
 };
