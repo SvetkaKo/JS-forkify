@@ -47,7 +47,6 @@ export const loadSerchResults = async function (query) {
         img: rec.image_url,
       };
     });
-    console.log();
   } catch (err) {
     console.error(`${err}`);
     throw err;
@@ -61,4 +60,12 @@ export const getSearhResultsPage = function (page = state.serch.page) {
   const end = page * state.serch.resultPerPage; // 10
 
   return state.serch.results.slice(start, end);
+};
+
+export const updateServings = function (newServ) {
+  state.recipe.ingredients.forEach(ing => {
+    ing.quantity = (ing.quantity / state.recipe.servings) * newServ;
+  });
+
+  state.recipe.servings = newServ;
 };
