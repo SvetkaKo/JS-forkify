@@ -3,6 +3,7 @@ import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
+import bookmarkView from './views/bookmarkView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -12,7 +13,7 @@ import { async } from 'regenerator-runtime';
 
 ///////////////////////////////////////
 
-console.log(`let's have fun!`);
+console.log(`let's have fun! You're amazing!`);
 
 const controlRecipes = async function () {
   try {
@@ -25,8 +26,9 @@ const controlRecipes = async function () {
     //render spiner while the recipe is loading
     recipeView.renderSpiner();
 
-    // update resu;ts view to mark selected search result
+    // update results view to mark selected search result
     resultsView.update(model.getSearhResultsPage());
+    bookmarkView.update(model.state.bookmarks);
 
     //loading recipe from model
     await model.loadRecipe(id);
@@ -34,7 +36,7 @@ const controlRecipes = async function () {
     // Rendering recipe
     recipeView.render(model.state.recipe);
 
-    console.log(model.state.recipe);
+    // console.log(model.state.recipe);
   } catch (err) {
     console.error(err);
     recipeView.renderError();
@@ -49,7 +51,7 @@ const controlSerchResults = async function () {
     const query = searchView.getQuery();
     if (!query) return;
 
-    // load aearch results
+    // load search results
     await model.loadSerchResults(query);
 
     // Rendering results
@@ -79,10 +81,25 @@ const controlServings = function (newServ) {
   recipeView.update(model.state.recipe);
 };
 
+const controlAddBookmark = function () {
+  //add or remove bookmark
+  if (!model.state.recipe.bookmarked) {
+    model.addBookmark(model.state.recipe);
+  } else {
+    model.deleteBookmark(model.state.recipe.id);
+  }
+  //update element after bookmarking
+  recipeView.update(model.state.recipe);
+
+  //render bookmark
+  bookmarkView.render(model.state.bookmarks);
+};
+
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHendlerSearch(controlSerchResults);
   paginationView.addHendlerClick(controlPagination);
   recipeView.addHandlerUpdaitServings(controlServings);
+  recipeView.addHandlerAddBookmar(controlAddBookmark);
 };
 init();
